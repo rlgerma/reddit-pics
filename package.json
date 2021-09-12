@@ -16,7 +16,7 @@
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "source-map-explorer": "^2.5.0",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^2.1.0"
   },
   "devDependencies": {
     "brunch": "^4.0.0",
