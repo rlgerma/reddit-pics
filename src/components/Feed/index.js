@@ -54,7 +54,7 @@ export default function Feed() {
         placement='right'
         onClose={onClose}
         visible={isOpen}
-        width={600}
+        width={480}
         headerStyle={{ textAlign: "center", padding: "2rem" }}
       >
         <DrawerContent {...postData} />
@@ -63,7 +63,7 @@ export default function Feed() {
         {posts.data?.children.map(
           (post, index) =>
             post.data?.thumbnail.includes("https") && (
-              <Col key={index} xl={6} lg={12} md={12} sm={1} xs={1}>
+              <Col key={index} xl={6} lg={12} md={12} sm={24} xs={24}>
                 <Card
                   hoverable
                   bordered={false}
