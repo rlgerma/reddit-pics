@@ -34,7 +34,7 @@ export default function DrawerContent(props) {
     // Fetch comments of the post.
     async function handleSearch() {
       try {
-        const URL = `http://www.reddit.com${props?.permalink}.json?jsonp=`;
+        const URL = `https://www.reddit.com${props?.permalink}.json?jsonp=`;
         const req = await fetch(URL)
           .then((res) => res.json())
           .then((json) => setPostComments(json[1].data.children))
