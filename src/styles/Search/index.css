@@ -1,0 +1,9 @@
+.search-card {
+  min-height: 100%;
+}
+
+.search-card-image {
+  width: 100%;
+  min-height: 32vh;
+  max-height: 32vh;
+}
