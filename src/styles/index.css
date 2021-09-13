@@ -1,13 +1,14 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* Global Styles */
+@import "~antd/dist/antd.css";
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Component Styles*/
+@import "./Search/index.css";
+@import "./DrawerContent/index.css";
+
+.logo {
+  float: left;
+  width: 240px;
+  height: 62px;
+  background: center / contain no-repeat;
+  background-image: url("../assets/rp-trans.png");
 }
