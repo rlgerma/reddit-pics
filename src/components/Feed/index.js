@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+// util function to get window width for drawer
+import useWindowDimensions from "../../utils/windowDimensions";
+
 import DrawerContent from "../DrawerContent";
 
 import { Card, Col, Drawer, Image, Row, Spin } from "antd";
@@ -11,7 +14,7 @@ export default function Feed() {
   const [postData, setPostData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const { width } = useWindowDimensions();
   useEffect(() => {
     // Loads data from reddit API in r/pics.
     async function handleSearch() {
@@ -54,7 +57,7 @@ export default function Feed() {
         placement='right'
         onClose={onClose}
         visible={isOpen}
-        width={600}
+        width={width > 600 ? 600 : 360}
         headerStyle={{ textAlign: "center", padding: "2rem" }}
       >
         <DrawerContent {...postData} />
