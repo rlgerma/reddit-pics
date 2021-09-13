@@ -17,7 +17,7 @@ export default function Feed() {
     async function handleSearch() {
       setLoading(true);
       try {
-        const URL = "http://www.reddit.com/r/pics/.json?jsonp=";
+        const URL = "https://www.reddit.com/r/pics/.json?jsonp=";
         const req = await fetch(URL)
           .then((res) => res.json())
           .then((json) => setPosts(json))
