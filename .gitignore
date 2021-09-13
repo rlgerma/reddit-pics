@@ -147,8 +147,8 @@ dist
 
 /coverage
 
-<!-- # production -->
-<!-- /build -->
+# production
+/build
 
 # misc
 
