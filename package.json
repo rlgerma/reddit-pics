@@ -20,7 +20,7 @@
   "devDependencies": {
     "brunch": "^4.0.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-react": "^7.25.2",
+    "eslint-plugin-react": "^7.25.3",
     "onchange": "^7.1.0",
     "terser-brunch": "^4.1.0"
   },
