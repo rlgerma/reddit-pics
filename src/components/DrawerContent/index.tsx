@@ -21,12 +21,15 @@ import {
 } from "antd";
 
 import { ArrowUpOutlined, RedditOutlined } from "@ant-design/icons";
+import { RedditSinglePost, RedditSinglePostComments } from "../types";
 
 // Component: DrawerContent - Loads details of a post selected in parent component: 'Feed'.
 // An additional fetch request is made to get the comments of the post.
-export default function DrawerContent(props) {
-  const [postComments, setPostComments] = useState([]);
-  const [commentsLoaded, setCommentsLoaded] = useState(false);
+const DrawerContent = (props: RedditSinglePost): JSX.Element => {
+  const [postComments, setPostComments] = useState<RedditSinglePostComments[]>(
+    []
+  );
+  const [commentsLoaded, setCommentsLoaded] = useState<boolean>(false);
 
   const { Panel } = Collapse;
 
@@ -47,9 +50,11 @@ export default function DrawerContent(props) {
         console.error(error);
       }
     }
+
     if (props) {
       handleSearch();
     }
+
     if (postComments.length > 0) {
       console.info("%cComments loaded", "color: #42e089");
     }
@@ -62,18 +67,18 @@ export default function DrawerContent(props) {
           <Image src={props.url} className='drawer-content-image' />
         </Col>
       </Row>
-      <Row gutters={[16, 16]}>
+      <Row gutter={[16, 16]}>
         <Col span={24}>
           <Divider />
           <p className='site-description-item-profile-p'>Stats</p>
-          <Row gutters={[16, 16]}>
+          <Row gutter={[16, 16]}>
             <Col span={12}>
               <DescriptionItem
                 title='Up votes'
                 content={
                   <>
                     <ArrowUpOutlined style={{ color: "#f38546" }} />{" "}
-                    <CountUp end={props.ups} duration={1.5} />
+                    <CountUp end={props.ups || 0} duration={1.5} />
                   </>
                 }
               />
@@ -83,7 +88,7 @@ export default function DrawerContent(props) {
               <DescriptionItem
                 title='Awards'
                 content={
-                  <Row gutters={[16, 16]}>
+                  <Row gutter={[16, 16]}>
                     {props.all_awardings
                       ?.sort?.((a, b) => (a.count > b.count ? -1 : 1))
                       .map?.((award, index) => (
@@ -133,7 +138,7 @@ export default function DrawerContent(props) {
                               }
                               content={<p>{data.body}</p>}
                               actions={[
-                                <Tooltip key={index}>
+                                <Tooltip overlay={index} key={index}>
                                   <span>
                                     <ArrowUpOutlined
                                       style={{
@@ -159,7 +164,7 @@ export default function DrawerContent(props) {
         <Col span={24}>
           <Divider />
           <p className='site-description-item-profile-p'>User</p>
-          <Row gutters={[16, 16]}>
+          <Row gutter={[16, 16]}>
             <Col span={12}>
               <DescriptionItem
                 title='Author'
@@ -177,7 +182,9 @@ export default function DrawerContent(props) {
             <Col span={12}>
               <DescriptionItem
                 title='Published on'
-                content={dayjs(props.created_utc * 1000).format("MMM D, YYYY")}
+                content={dayjs(
+                  (props.created_utc ?? 0) * 1000 || new Date()
+                ).format("MMM D, YYYY")}
               />
             </Col>
           </Row>
@@ -185,4 +192,5 @@ export default function DrawerContent(props) {
       </Row>
     </>
   );
-}
+};
+export default DrawerContent;

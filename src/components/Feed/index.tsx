@@ -1,38 +1,44 @@
-import { useEffect, useState } from "react";
+import { FC, Key, useEffect, useState } from "react";
 
 // util function to get window width for drawer
-import useWindowDimensions from "../../utils/windowDimensions";
+import { useWindowDimensions } from "../../utils/windowDimensions";
 
 import DrawerContent from "../DrawerContent";
 
 import { Card, Col, Drawer, Image, Row, Spin } from "antd";
 
+import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from "../types";
+
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
-export default function Feed() {
-  const [posts, setPosts] = useState([]);
-  const [postData, setPostData] = useState(null);
+const Feed: FC = () => {
+  const [posts, setPosts] = useState<RedditAllPosts | null>(null);
+
+  const [postData, setPostData] = useState<RedditSinglePost | null>(null);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
   const { width } = useWindowDimensions();
-  useEffect(() => {
-    // Loads data from reddit API in r/pics.
-    async function handleSearch() {
-      setLoading(true);
-      try {
-        const URL = "https://www.reddit.com/r/pics/.json?jsonp=";
-        const req = await fetch(URL)
-          .then((res) => res.json())
-          .then((json) => setPosts(json))
-          .then(() => setLoading(false))
-          .catch((error) => {
-            throw error;
-          });
-        return req;
-      } catch (error) {
-        console.error(error);
-      }
+
+  // Loads data from reddit API in r/pics.
+  async function handleSearch() {
+    setLoading(true);
+    try {
+      const URL = "https://www.reddit.com/r/pics/.json?jsonp=";
+      const req = await fetch(URL)
+        .then((res) => res.json())
+        .then((json) => setPosts(json))
+        .then(() => setLoading(false))
+        .catch((error) => {
+          throw error;
+        });
+      return req;
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  useEffect(() => {
     handleSearch();
   }, []);
 
@@ -53,7 +59,7 @@ export default function Feed() {
   ) : (
     <>
       <Drawer
-        title={postData?.title ?? ""}
+        title={postData?.title ?? "No Title"}
         placement='right'
         onClose={onClose}
         visible={isOpen}
@@ -63,17 +69,17 @@ export default function Feed() {
         <DrawerContent {...postData} />
       </Drawer>
       <Row gutter={[16, 16]}>
-        {posts.data?.children.map(
-          (post, index) =>
-            post.data?.thumbnail.includes("https") && (
+        {posts?.data.children.map(
+          (post: RedditPostsMap, index: Key | null | undefined) =>
+            post.data.thumbnail.includes("https") && (
               <Col key={index} xl={6} lg={12} md={12} sm={24} xs={24}>
                 <Card
                   hoverable
                   bordered={false}
                   cover={
                     <Image
-                      alt={post.data?.title}
-                      src={post.data?.url}
+                      alt={post.data.title}
+                      src={post.data.url}
                       preview={false}
                       className='search-card-image'
                     />
@@ -85,8 +91,8 @@ export default function Feed() {
                   className='search-card'
                 >
                   <Card.Meta
-                    title={post.data?.title}
-                    description={post.data?.author}
+                    title={post.data.title}
+                    description={post.data.author}
                   />
                 </Card>
               </Col>
@@ -95,4 +101,6 @@ export default function Feed() {
       </Row>
     </>
   );
-}
+};
+
+export default Feed;

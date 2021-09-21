@@ -1,13 +1,23 @@
+import { FC } from "react";
+
 import { Layout } from "antd";
 import dayjs from "dayjs";
+
 const { Header, Content, Footer } = Layout;
 
 // Component: LayoutWrap returns a global layout component with a header, content, and footer.
 // Child components are passed as props in 'content'.
 // Sets the current date in the footer.
-const LayoutWrap = ({ children }) => (
+const LayoutWrap: FC = ({ children }) => (
   <Layout>
-    <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
+    <Header
+      style={{
+        position: "fixed",
+        zIndex: 1,
+        width: "100%",
+        backgroundColor: "#FE4600",
+      }}
+    >
       <div className='logo' />
     </Header>
     <Content

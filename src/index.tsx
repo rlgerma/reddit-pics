@@ -1,8 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./styles/index.css";
+
 import App from "./app";
-import reportWebVitals from "./utils/reportWebVitals";
+
+import "./styles/index.less";
+
+import * as serviceWorkerRegistration from "./utils/serviceWorkerRegistration";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,4 +14,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-reportWebVitals();
+serviceWorkerRegistration.unregister();
