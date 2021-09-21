@@ -1,6 +1,12 @@
 // returns a string in the form of 'rgb(r,g,b)'
-export default function rgb() {
-  function GetColors() {
+export default function rgb(): string {
+  interface Colors {
+    r: number;
+    g: number;
+    b: number;
+  }
+
+  function GetColors(): Colors {
     const cols = { r: 0, g: 0, b: 0 };
     let count = 0;
     while (cols.r + cols.g + cols.b < 300 && count < 4) {
