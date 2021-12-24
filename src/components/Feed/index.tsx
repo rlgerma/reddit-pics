@@ -5,9 +5,11 @@ import { useWindowDimensions } from "../../utils/windowDimensions";
 
 import DrawerContent from "../DrawerContent";
 
-import { Card, Col, Drawer, Image, Row, Spin } from "antd";
+import { Button, Card, Col, Drawer, Image, Input, Row, Spin } from "antd";
 
 import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from "../types";
+import { getSub } from "../../utils/getsub";
+import { readHistory } from "../../utils/readHistory";
 
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
@@ -18,21 +20,52 @@ const Feed: FC = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
+  const [value, setValue] = useState<string>("pics");
+  const [history, setHistory] = useState<string[]>([]);
   const { width } = useWindowDimensions();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async function addHistory(event: any, value: string) {
+    event.preventDefault();
+    try {
+      const history = await readHistory();
+      if (!history) {
+        localStorage.setItem("history", JSON.stringify([value]));
+        setHistory([value]);
+      } else {
+        const newHistory = [value, ...history];
+        localStorage.setItem("history", JSON.stringify(newHistory));
+        if (!history.includes(value)) {
+          setHistory(newHistory);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      handleSearch();
+    }
+  }
   // Loads data from reddit API in r/pics.
   async function handleSearch() {
     setLoading(true);
     try {
-      const URL = "https://www.reddit.com/r/pics/.json?jsonp=";
-      const req = await fetch(URL)
-        .then((res) => res.json())
-        .then((json) => setPosts(json))
-        .then(() => setLoading(false))
-        .catch((error) => {
-          throw error;
-        });
-      return req;
+      const history = await readHistory();
+
+      const runSearch = (sub: string) =>
+        getSub(sub)
+          .then((json) => setPosts(json))
+          .then(() => setLoading(false))
+          .catch((error) => {
+            throw error;
+          });
+
+      if (!history) {
+        runSearch("pics");
+        setValue("pics");
+      } else {
+        runSearch(history[0]);
+        setValue(history[0]);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -68,36 +101,63 @@ const Feed: FC = () => {
       >
         <DrawerContent {...postData} />
       </Drawer>
-      <Row gutter={[16, 16]}>
-        {posts?.data.children.map(
-          (post: RedditPostsMap, index: Key | null | undefined) =>
-            post.data.thumbnail.includes("https") && (
-              <Col key={index} xl={6} lg={12} md={12} sm={24} xs={24}>
-                <Card
-                  hoverable
-                  bordered={false}
-                  cover={
-                    <Image
-                      alt={post.data.title}
-                      src={post.data.url}
-                      preview={false}
-                      className='search-card-image'
-                    />
-                  }
-                  onClick={() => {
-                    setIsOpen(true);
-                    setPostData(post.data);
-                  }}
-                  className='search-card'
+      <Row align='middle' justify='end' gutter={[16, 16]}>
+        <Col>
+          <Row align='middle'>
+            <Col>
+              {history.map((sub: string) => (
+                <Button
+                  style={{ textDecoration: "underline" }}
+                  type='link'
+                  key={sub}
+                  onClick={(event) => addHistory(event, sub)}
                 >
-                  <Card.Meta
-                    title={post.data.title}
-                    description={post.data.author}
-                  />
-                </Card>
-              </Col>
-            )
-        )}
+                  <em>{sub}</em>
+                </Button>
+              ))}
+            </Col>
+            <Col>
+              <Input.Search
+                addonBefore={"r/"}
+                defaultValue={value}
+                onChange={(event) => setValue(event.target.value)}
+                onSearch={(value, event) => addHistory(event, value)}
+              />
+            </Col>
+            <Col>
+              <Button
+                onClick={() => [localStorage.removeItem("history"), handleSearch(), setHistory([])]}
+              >
+                Reset
+              </Button>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      <Row gutter={[16, 16]}>
+        {posts?.data.children.map((post: RedditPostsMap, index: Key | null | undefined) => (
+          <Col key={index} xl={6} lg={12} md={12} sm={24} xs={24}>
+            <Card
+              hoverable
+              bordered={false}
+              cover={
+                <Image
+                  alt={post.data.title}
+                  src={post.data.url}
+                  preview={false}
+                  className='search-card-image'
+                />
+              }
+              onClick={() => {
+                setIsOpen(true);
+                setPostData(post.data);
+              }}
+              className='search-card'
+            >
+              <Card.Meta title={post.data.title} description={post.data.author} />
+            </Card>
+          </Col>
+        ))}
       </Row>
     </>
   );
