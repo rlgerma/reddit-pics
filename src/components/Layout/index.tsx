@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { Layout } from "antd";
+import { Col, Layout, Row } from "antd";
 import dayjs from "dayjs";
 
 const { Header, Content, Footer } = Layout;
@@ -18,16 +18,14 @@ const LayoutWrap: FC = ({ children }) => (
         backgroundColor: "#FE4600",
       }}
     >
-      <div className='logo' />
+      <Row justify='space-between' align='middle'>
+        <Col>
+          <div className='logo' />
+        </Col>
+      </Row>
     </Header>
-    <Content
-      className='site-layout'
-      style={{ padding: "0 50px", marginTop: 64 }}
-    >
-      <div
-        className='site-layout-background'
-        style={{ padding: 24, minHeight: 980 }}
-      >
+    <Content className='site-layout' style={{ padding: "0 50px", marginTop: 64 }}>
+      <div className='site-layout-background' style={{ padding: 24, minHeight: 980 }}>
         {children}
       </div>
     </Content>

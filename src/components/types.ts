@@ -1,39 +1,64 @@
-
 export interface RedditAllPosts {
-    data : {
-        children: RedditPostsMap[]
-    }
+  data: {
+    children: RedditPostsMap[];
+  };
 }
 
 export interface RedditPostsMap {
-    data: {
-      thumbnail: string | string[];
-      title?: string;
-      url: string | undefined;
-      author: string;
-    };
-  }
+  data: {
+    thumbnail: string;
+    title?: string;
+    url: string | undefined;
+    author: string;
+  };
+}
 
-  export interface RedditSinglePost {
-    permalink?: string | null | undefined;
-    url?: string | undefined;
-    ups?: number | undefined;
-    all_awardings?: {
+export interface RedditSinglePost {
+  permalink?: string | null | undefined;
+  url?: string | undefined;
+  ups?: number | undefined;
+  all_awardings?:
+    | {
         icon_url: string;
         count: number;
         name: string;
-    }[] | undefined;
-    thumbnail?: string | string[] | undefined;
-    title?: string | undefined;
-    author?: string | undefined;
-    created_utc?: number | undefined;
- }
+      }[]
+    | undefined;
+  thumbnail?: string | string[] | undefined;
+  title?: string | undefined;
+  author?: string | undefined;
+  created_utc?: number | undefined;
+}
 
-  export interface RedditSinglePostComments {
+export interface RedditSinglePostComments {
+  data: {
+    author: string;
+    body: string;
+    body_html: string;
+    created_utc: number;
+    ups: number;
+    all_awardings?: {
+      icon_url: string;
+      count: number;
+      name: string;
+    }[];
+    replies: {
       data: {
-          author: string;
+        children: {
+          data: {
+            author: string;
             body: string;
+            body_html: string;
             created_utc: number;
             ups: number;
-      }
-  }
+            all_awardings?: {
+              icon_url: string;
+              count: number;
+              name: string;
+            }[];
+          };
+        }[];
+      };
+    };
+  };
+}
