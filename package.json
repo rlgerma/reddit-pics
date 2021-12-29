@@ -5,7 +5,7 @@
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@craco/craco": "^6.3.0",
-    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -28,14 +28,14 @@
     "workbox-broadcast-update": "^6.2.4",
     "workbox-cacheable-response": "^6.2.4",
     "workbox-core": "^6.2.2",
-    "workbox-expiration": "^6.2.4",
+    "workbox-expiration": "^6.4.2",
     "workbox-google-analytics": "^6.2.4",
     "workbox-navigation-preload": "^6.2.4",
     "workbox-precaching": "^6.2.4",
     "workbox-range-requests": "^6.2.4",
     "workbox-routing": "^6.2.0",
     "workbox-strategies": "^6.2.3",
-    "workbox-streams": "^6.2.4"
+    "workbox-streams": "^6.4.2"
   },
   "devDependencies": {
     "brunch": "^4.0.0",
