@@ -134,30 +134,33 @@ const Feed: FC = () => {
           </Row>
         </Col>
       </Row>
-      <Row gutter={[16, 16]}>
-        {posts?.data.children.map((post: RedditPostsMap, index: Key | null | undefined) => (
-          <Col key={index} xl={6} lg={12} md={12} sm={24} xs={24}>
-            <Card
-              hoverable
-              bordered={false}
-              cover={
-                <Image
-                  alt={post.data.title}
-                  src={post.data.url}
-                  preview={false}
-                  className='search-card-image'
-                />
-              }
-              onClick={() => {
-                setIsOpen(true);
-                setPostData(post.data);
-              }}
-              className='search-card'
-            >
-              <Card.Meta title={post.data.title} description={post.data.author} />
-            </Card>
-          </Col>
-        ))}
+      <Row gutter={[16, 16]} justify='space-between' align='stretch'>
+        {posts?.data.children.map(
+          (post: RedditPostsMap, index: Key | null | undefined) =>
+            post.data.url?.includes("https://i.") && (
+              <Col key={index}>
+                <Card
+                  hoverable
+                  bordered={false}
+                  cover={
+                    <Image
+                      alt={post.data.title}
+                      src={post.data.url}
+                      preview={false}
+                      className='search-card-image'
+                    />
+                  }
+                  onClick={() => {
+                    setIsOpen(true);
+                    setPostData(post.data);
+                  }}
+                  className='search-card'
+                >
+                  <Card.Meta title={post.data.title} description={post.data.author} />
+                </Card>
+              </Col>
+            )
+        )}
       </Row>
     </>
   );
