@@ -35,7 +35,7 @@
     "workbox-range-requests": "^6.2.4",
     "workbox-routing": "^6.2.0",
     "workbox-strategies": "^6.2.3",
-    "workbox-streams": "^6.2.4"
+    "workbox-streams": "^6.4.2"
   },
   "devDependencies": {
     "brunch": "^4.0.0",
