@@ -38,7 +38,7 @@
     "workbox-streams": "^6.4.2"
   },
   "devDependencies": {
-    "brunch": "^4.0.0",
+    "brunch": "^4.0.1",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.28.0",
     "onchange": "^7.1.0",
