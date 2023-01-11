@@ -2566,6 +2566,14 @@ antd@^4.18.9:
     rc-util "^5.14.0"
     scroll-into-view-if-needed "^2.2.25"
 
+anymatch@3.1.2, anymatch@^3, anymatch@^3.0.0, anymatch@^3.0.3, anymatch@^3.1.2, anymatch@~3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
+  integrity sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==
+  dependencies:
+    normalize-path "^3.0.0"
+    picomatch "^2.0.4"
+
 anymatch@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-2.0.0.tgz#bcb24b4f37934d9aa7ac17b4adaf89e7c76ef2eb"
@@ -2573,14 +2581,6 @@ anymatch@^2.0.0:
   dependencies:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
-
-anymatch@^3, anymatch@^3.0.0, anymatch@^3.0.3, anymatch@^3.1.1, anymatch@^3.1.2, anymatch@~3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
-  integrity sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==
-  dependencies:
-    normalize-path "^3.0.0"
-    picomatch "^2.0.4"
 
 anysort@^2.0.0:
   version "2.0.0"
@@ -3244,12 +3244,12 @@ brunch-skeletons@^0.2.0:
   resolved "https://registry.yarnpkg.com/brunch-skeletons/-/brunch-skeletons-0.2.0.tgz#0005de9ba32235bbc7da38ba8ec6412ece4197a1"
   integrity sha512-+ywd1mCqyTBjx0ENEC918IhLnV2gaUMkAU49ioIrKcLdt9cT77OvpWDtSwuKcSo3BDhbGYo2Bx1c10qoEtd7Iw==
 
-brunch@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/brunch/-/brunch-4.0.0.tgz#67d9cc436b25e113484177cd0666c40f26201352"
-  integrity sha512-qVWaZTsP6xTCs3zLYzPLm02ti/EKehAdfEdSESaK4+iICi3U/iRKURQ7dYNiBD7y0E8aKAZ/ODIh7jpB0U57AA==
+brunch@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/brunch/-/brunch-4.0.2.tgz#ed473156a32e53f9b03292fc375ceefb7c89b9c2"
+  integrity sha512-J+6M9uDk1/24+OTFauNoTqEiD6UVoIbpQeqnZX/YTwKyrsTJ2LbA6L1Nf1oWE2QWwd6BXHIvFg+qK92SqC+Rxg==
   dependencies:
-    anymatch "^3.1.1"
+    anymatch "3.1.2"
     anysort "^2.0.0"
     brunch-skeletons "^0.2.0"
     chokidar "^3.5.1"
@@ -3259,7 +3259,7 @@ brunch@^4.0.0:
     deppack "^0.10.0"
     deps-install "~0.2.1"
     fcache "~0.3"
-    hosted-git-info "^3.0.4"
+    hosted-git-info "5.0.0"
     loggy "~1.0.8"
     ncp "^2.0.0"
     normalize-git-url "^3.0.2"
@@ -5986,17 +5986,17 @@ hoopy@^0.1.4:
   resolved "https://registry.yarnpkg.com/hoopy/-/hoopy-0.1.4.tgz#609207d661100033a9a9402ad3dea677381c1b1d"
   integrity sha512-HRcs+2mr52W0K+x8RzcLzuPPmVIKMSv97RGHy0Ea9y/mpcaK+xTrjICA04KAHi4GRzxliNqNJEFYWHghy3rSfQ==
 
+hosted-git-info@5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-5.0.0.tgz#df7a06678b4ebd722139786303db80fdf302ea56"
+  integrity sha512-rRnjWu0Bxj+nIfUOkz0695C0H6tRrN5iYIzYejb0tDEefe2AekHu/U5Kn9pEie5vsJqpNQU02az7TGSH3qpz4Q==
+  dependencies:
+    lru-cache "^7.5.1"
+
 hosted-git-info@^2.1.4:
   version "2.8.9"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.9.tgz#dffc0bf9a21c02209090f2aa69429e1414daf3f9"
   integrity sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==
-
-hosted-git-info@^3.0.4:
-  version "3.0.8"
-  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-3.0.8.tgz#6e35d4cc87af2c5f816e4cb9ce350ba87a3f370d"
-  integrity sha512-aXpmwoOhRBrw6X3j0h5RloK4x1OzsxMPyxqIHyNfSe2pypkVTZFpEiRoSipPEPlMrh0HW/XsjkJ5WgnCirpNUw==
-  dependencies:
-    lru-cache "^6.0.0"
 
 hpack.js@^2.1.6:
   version "2.1.6"
@@ -7631,6 +7631,11 @@ lru-cache@^6.0.0:
   integrity sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
   dependencies:
     yallist "^4.0.0"
+
+lru-cache@^7.5.1:
+  version "7.14.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.14.1.tgz#8da8d2f5f59827edb388e63e459ac23d6d408fea"
+  integrity sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==
 
 lz-string@^1.4.4:
   version "1.4.4"
