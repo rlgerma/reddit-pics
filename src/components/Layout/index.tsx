@@ -30,7 +30,11 @@ const LayoutWrap: FC = ({ children }) => (
       </div>
     </Content>
     <Footer style={{ textAlign: "center" }}>
-      Reddit-Pics ©{dayjs().format("YYYY")} Created by Richard Germaine
+      Reddit-Pics {dayjs().format("YYYY")} | Created by{" "}
+      <a href='https://github.com/rlgerma' target='_blank' rel='noreferrer'>
+        rlgerma
+      </a>{" "}
+      😎
     </Footer>
   </Layout>
 );
