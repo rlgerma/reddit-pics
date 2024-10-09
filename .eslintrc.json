@@ -9,7 +9,12 @@
   },
   "plugins": ["@typescript-eslint", "react-hooks"],
   "extends": ["plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
-  "ignorePatterns": ["**/src/styles/*", "**/src/assets/*.png", "**/src/assets/*.jpg"],
+  "ignorePatterns": [
+    "**/src/styles/*",
+    "**/src/assets/*.png",
+    "**/src/assets/*.jpg",
+    "*.config.js"
+  ],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",

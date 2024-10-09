@@ -53,6 +53,7 @@
     "build": "craco build",
     "eject": "react-scripts eject"
   },
+  "cracoConfig": "./craco.config.js",
   "eslintConfig": {
     "extends": [
       "react-app",
