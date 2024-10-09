@@ -38,8 +38,10 @@ const DrawerContent = (props: RedditSinglePost): JSX.Element => {
         const URL = `https://www.reddit.com${props?.permalink}.json?jsonp=`;
         const req = await fetch(URL)
           .then((res) => res.json())
-          .then((json) => [console.log(json), setPostComments(json[1].data.children)])
-          .then(() => setCommentsLoaded(true))
+          .then((json) => {
+            setPostComments(json[1].data.children);
+            setCommentsLoaded(true);
+          })
           .catch((error) => {
             throw error;
           });

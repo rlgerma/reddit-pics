@@ -8,15 +8,8 @@
     }
   },
   "plugins": ["@typescript-eslint", "react-hooks"],
-  "extends": [
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "ignorePatterns": [
-    "**/src/styles/*",
-    "**/src/assets/*.png",
-    "**/src/assets/*.jpg"
-  ],
+  "extends": ["plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  "ignorePatterns": ["**/src/styles/*", "**/src/assets/*.png", "**/src/assets/*.jpg"],
   "rules": {
     "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",

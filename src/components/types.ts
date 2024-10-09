@@ -1,5 +1,6 @@
 export interface RedditAllPosts {
   data: {
+    after?: string;
     children: RedditPostsMap[];
   };
 }
