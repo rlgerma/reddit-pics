@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function readStorage(name: string): Promise<any[] | undefined> {
+export async function readStorage(name: string): Promise<string[] | undefined> {
   try {
     const storageItem = localStorage.getItem(name);
     if (storageItem) return JSON.parse(storageItem);

@@ -28,12 +28,11 @@ import { readStorage } from "../../utils/read";
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
 const Feed: FC = () => {
-  const [posts, setPosts] = useState<RedditAllPosts | null>(null);
-
-  const [postData, setPostData] = useState<RedditSinglePost | null>(null);
-  const [postChildren, setPostChildren] = useState<RedditPostsMap[]>([]);
+  const [posts, setPosts] = useState<RedditAllPosts | undefined>(undefined);
+  const [postData, setPostData] = useState<RedditSinglePost | undefined>(undefined);
+  // const [postChildren, setPostChildren] = useState<RedditPostsMap[]>([]);
   const [loading, setLoading] = useState(false);
-  const [after, setAfter] = useState<string | undefined>(undefined);
+  // const [after, setAfter] = useState<string | undefined>(undefined);
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<boolean>(true);
   const [value, setValue] = useState<string>("pics");
@@ -41,7 +40,6 @@ const Feed: FC = () => {
   const [history, setHistory] = useState<string[]>([]);
   const { width } = useWindowDimensions();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function addHistory(
     event:
       | React.MouseEvent<HTMLElement>
