@@ -1,8 +1,28 @@
 .search-card {
-  max-width: 20vw;
+  @media @desktop {
+    max-width: 20vw;
+  }
+  @media @mobile {
+    max-width: 100vw;
+  }
 }
 
 .search-card-image {
   width: 100%;
-  max-height: 50vh;
+  @media @desktop {
+    max-height: 50vh;
+  }
+  @media @mobile {
+    max-height: 80vh;
+    height: max-content;
+  }
+}
+
+.ant-card-body {
+  @media @desktop {
+    padding: 24px;
+  }
+  @media @mobile {
+    padding: 4px;
+  }
 }

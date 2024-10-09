@@ -232,12 +232,13 @@ const Feed: FC = () => {
         gutter={[16, 16]}
         justify={posts?.data?.children ? "space-between" : "center"}
         align={posts?.data?.children ? "stretch" : "middle"}
+        className='feed-row'
       >
         {posts?.data?.children ? (
           posts?.data?.children.map(
             (post: RedditPostsMap, index: Key | null | undefined) =>
               post.data.url?.includes("https://i.") && (
-                <Col key={index}>
+                <Col key={index} md={6} xs={20}>
                   <Card
                     hoverable
                     bordered={false}
