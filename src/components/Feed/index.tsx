@@ -13,6 +13,8 @@ import {
   Drawer,
   Image,
   Input,
+  Radio,
+  RadioChangeEvent,
   Result,
   Row,
   Spin,
@@ -24,6 +26,7 @@ import list from "../../utils/convertedlist.json";
 import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from "../types";
 import { getSub } from "../../utils/getsub";
 import { readStorage } from "../../utils/read";
+import { text } from "stream/consumers";
 
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
@@ -31,8 +34,9 @@ const Feed: FC = () => {
   const [posts, setPosts] = useState<RedditAllPosts | undefined>(undefined);
   const [postData, setPostData] = useState<RedditSinglePost | undefined>(undefined);
   // const [postChildren, setPostChildren] = useState<RedditPostsMap[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // const [after, setAfter] = useState<string | undefined>(undefined);
+  const [sort, setSort] = useState<"hot" | "new" | "top" | "rising" | "controversial">("hot");
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<boolean>(true);
   const [value, setValue] = useState<string>("pics");
@@ -50,6 +54,7 @@ const Feed: FC = () => {
   ) {
     if (event) event.preventDefault();
     try {
+      if (value === "") return;
       const history = await readStorage("history");
       if (!history) {
         localStorage.setItem("history", JSON.stringify([value]));
@@ -75,7 +80,7 @@ const Feed: FC = () => {
       const history = await readStorage("history");
 
       const runSearch = (sub: string) =>
-        getSub(sub)
+        getSub(sub, sort)
           .then((json) => {
             setPosts(json);
             // setPostChildren([...postChildren, ...json.data.children]);
@@ -102,6 +107,7 @@ const Feed: FC = () => {
 
   useEffect(() => {
     handleSearch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getPanelValue = (searchText: string) => {
@@ -131,11 +137,17 @@ const Feed: FC = () => {
 
   const onSelect = (data: string) => {
     setValue(data);
+    setOptions([]);
     addHistory(undefined, data);
   };
 
   // sets drawer state to closed when exited
   const onClose = () => setIsOpen(false);
+
+  const handleSortChange = (event: RadioChangeEvent) => {
+    setSort(event.target.value);
+    if (value !== "") addHistory(undefined, value);
+  };
 
   const toggleFilter = () => {
     setOptions([]);
@@ -171,19 +183,6 @@ const Feed: FC = () => {
       <Row align='middle' justify='end' gutter={[16, 16]}>
         <Col>
           <Row align='middle'>
-            <Col>
-              {history.map((sub: string) => (
-                <Button
-                  style={{ textDecoration: "underline" }}
-                  type='link'
-                  key={sub}
-                  onClick={(event) => addHistory(event, sub)}
-                >
-                  <em>{sub}</em>
-                </Button>
-              ))}
-            </Col>
-
             <Col
               style={{ display: "inline-flex", alignItems: "center", marginLeft: "0 1rem 1rem" }}
             >
@@ -192,6 +191,7 @@ const Feed: FC = () => {
                 style={{ width: 400 }}
                 onSelect={onSelect}
                 onSearch={(text) => setOptions(getPanelValue(text))}
+                defaultValue={value}
               >
                 <Input.Search
                   addonBefore={"r/"}
@@ -203,28 +203,61 @@ const Feed: FC = () => {
               </AutoComplete>
             </Col>
           </Row>
-          <Row align='middle' justify='end' style={{ padding: "0 1rem", marginBottom: "1rem" }}>
+          <Row align='middle' justify='center' style={{ padding: "0 1rem", marginBottom: "1rem" }}>
             <Col>
-              <Button
-                style={{ textDecoration: "underline" }}
-                type='link'
-                onClick={() => [
-                  localStorage.removeItem("history"),
-                  handleSearch(),
-                  setHistory([]),
-                  setOptions([]),
-                ]}
+              <Radio.Group
+                defaultValue={sort}
+                buttonStyle='solid'
+                size={width >= 600 ? "middle" : "small"}
+                onChange={handleSortChange}
               >
-                Clear History
-              </Button>
+                <Radio.Button value='hot'>Hot</Radio.Button>
+                <Radio.Button value='new'>New</Radio.Button>
+                <Radio.Button value='top'>Top</Radio.Button>
+                <Radio.Button value='rising'>Rising</Radio.Button>
+                <Radio.Button value='controversial'>Controversial</Radio.Button>
+              </Radio.Group>
             </Col>
-            <Col>
+            <Col style={{ padding: "0 1rem", marginTop: width <= 600 ? "1rem" : "0" }}>
               <Switch
                 checkedChildren='NSFW'
                 unCheckedChildren='SFW'
                 onChange={toggleFilter}
                 checked={!filter}
               />
+            </Col>
+          </Row>
+          <Row
+            align='middle'
+            justify={width >= 600 ? "end" : "center"}
+            style={{ padding: "0 1rem", marginBottom: "1rem", textAlign: "center" }}
+          >
+            <Col>
+              {history.map((sub: string) => (
+                <Button
+                  style={{ textDecoration: "underline" }}
+                  type='link'
+                  key={sub}
+                  onClick={(event) => addHistory(event, sub)}
+                >
+                  <em>{sub}</em>
+                </Button>
+              ))}
+              {width <= 600 && <br />}
+              {history.length >= 1 && (
+                <Button
+                  style={{ textDecoration: "underline" }}
+                  type='link'
+                  onClick={() => [
+                    localStorage.removeItem("history"),
+                    handleSearch(),
+                    setHistory([]),
+                    setOptions([]),
+                  ]}
+                >
+                  Clear All
+                </Button>
+              )}
             </Col>
           </Row>
         </Col>

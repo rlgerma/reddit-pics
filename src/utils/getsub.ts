@@ -1,9 +1,13 @@
-import { RedditAllPosts } from "../components/types";
+import { RedditAllPosts, SortType } from "../components/types";
 
-export async function getSub(sub: string, after?: string): Promise<RedditAllPosts | undefined> {
+export async function getSub(
+  sub: string,
+  sort: SortType = "hot",
+  after?: string
+): Promise<RedditAllPosts | undefined> {
   try {
     const req = await fetch(
-      `https://www.reddit.com/r/${sub}/hot/.json?limit=100?${after ? `&after=${after}` : ""}`
+      `https://www.reddit.com/r/${sub}/${sort}/.json?limit=100?${after ? `&after=${after}` : ""}`
     );
     if (req.ok) return req.json();
     else throw new Error(req.statusText);

@@ -1,3 +1,5 @@
+export type SortType = "hot" | "new" | "top" | "rising" | "controversial";
+
 export interface RedditAllPosts {
   data: {
     after?: string;
