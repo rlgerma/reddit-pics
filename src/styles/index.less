@@ -5,8 +5,30 @@
 @import "./Search/index.less";
 @import "./DrawerContent/index.less";
 
-@desktop: ~"only screen and (min-width: 960px) and (max-width: 1199px)";
+@desktop: ~"only screen and (min-width: 960px)";
 @mobile: ~"only screen and (min-width: 360px) and (max-width: 959px)";
+
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+body {
+  position: relative;
+}
+
+.site-layout {
+  margin-top: 64px;
+  @media @desktop {
+    padding: 0 48px;
+  }
+  @media @mobile {
+    padding: 0 8px;
+  }
+}
 
 .logo {
   float: left;
@@ -23,8 +45,8 @@ span.ant-input-group-wrapper {
 
 #root > section > main > div > div.ant-row.ant-row-space-between.ant-row-stretch.feed-row {
   @media @mobile {
-    margin-right: 0 !important;
+    margin: 0 auto !important;
     width: max-content;
-    max-width: 90vw;
+    max-width: 100vw;
   }
 }

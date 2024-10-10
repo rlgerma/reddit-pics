@@ -110,7 +110,8 @@ const Feed: FC = () => {
     if (filter) {
       return suggestions
         .filter((item: { name: string; nsfw: boolean }) => {
-          if (item?.name?.startsWith(searchText) && !item?.nsfw) return item;
+          if (item?.name?.toLowerCase().startsWith(searchText.toLowerCase()) && !item?.nsfw)
+            return item;
           else return null;
         })
         .filter((item) => item !== null)
@@ -119,7 +120,7 @@ const Feed: FC = () => {
     } else {
       return suggestions
         .filter((item: { name: string }) => {
-          if (item?.name?.startsWith(searchText)) return item;
+          if (item?.name?.toLowerCase().startsWith(searchText.toLowerCase())) return item;
           else return null;
         })
         .filter((item) => item !== null)
@@ -191,13 +192,13 @@ const Feed: FC = () => {
                 style={{ width: 400 }}
                 onSelect={onSelect}
                 onSearch={(text) => setOptions(getPanelValue(text))}
-                backfill={true}
-                allowClear={true}
               >
                 <Input.Search
                   addonBefore={"r/"}
                   defaultValue={value}
                   onChange={(event) => setValue(event.target.value)}
+                  onPressEnter={(event) => addHistory(event, value)}
+                  onSearch={(value, event) => addHistory(event, value)}
                 />
               </AutoComplete>
             </Col>

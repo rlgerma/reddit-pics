@@ -24,7 +24,7 @@ const LayoutWrap: FC = ({ children }) => (
         </Col>
       </Row>
     </Header>
-    <Content className='site-layout' style={{ padding: "0 50px", marginTop: 64 }}>
+    <Content className='site-layout'>
       <div className='site-layout-background' style={{ padding: 24, minHeight: 980 }}>
         {children}
       </div>
