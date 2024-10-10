@@ -144,6 +144,7 @@ const Feed: FC = () => {
   const onClose = () => setIsOpen(false);
 
   const handleSortChange = (event: RadioChangeEvent) => {
+    event.preventDefault();
     setSort(event.target.value);
     if (value !== "") addHistory(undefined, value);
   };
