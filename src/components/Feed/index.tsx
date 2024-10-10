@@ -26,7 +26,6 @@ import list from "../../utils/convertedlist.json";
 import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from "../types";
 import { getSub } from "../../utils/getsub";
 import { readStorage } from "../../utils/read";
-import { text } from "stream/consumers";
 
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
