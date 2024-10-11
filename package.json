@@ -28,7 +28,7 @@
     "workbox-background-sync": "^6.2.4",
     "workbox-broadcast-update": "^6.5.4",
     "workbox-cacheable-response": "^6.5.4",
-    "workbox-core": "^6.2.2",
+    "workbox-core": "^7.1.0",
     "workbox-expiration": "^6.4.2",
     "workbox-google-analytics": "^7.1.0",
     "workbox-navigation-preload": "^6.5.4",
