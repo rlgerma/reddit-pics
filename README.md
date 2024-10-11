@@ -2,6 +2,8 @@
 
 ## Status
 
+THIS SUCKS AND NEEDS TO BE REFACTORED. UNDER CONSTRUCTION 🚧
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/4e2980dc-c13f-46a1-8006-381de8332e88/deploy-status)](https://app.netlify.com/sites/reddit-pics-best/deploys)
 
 ## Steps to install

@@ -17,20 +17,18 @@ export interface RedditPostsMap {
 }
 
 export interface RedditSinglePost {
-  permalink?: string | null | undefined;
-  url?: string | undefined;
-  ups?: number | undefined;
-  all_awardings?:
-    | {
-        icon_url: string;
-        count: number;
-        name: string;
-      }[]
-    | undefined;
-  thumbnail?: string | string[] | undefined;
-  title?: string | undefined;
-  author?: string | undefined;
-  created_utc?: number | undefined;
+  permalink?: string | null;
+  url?: string;
+  ups?: number;
+  all_awardings?: {
+    icon_url: string;
+    count: number;
+    name: string;
+  }[];
+  thumbnail?: string | string[];
+  title?: string;
+  author?: string;
+  created_utc?: number;
 }
 
 export interface RedditSinglePostComments {

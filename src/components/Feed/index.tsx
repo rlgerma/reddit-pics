@@ -74,23 +74,11 @@ const Feed: FC = () => {
 
   // Loads data from reddit API in r/pics.
   async function handleSearch() {
-    setLoading(true);
     try {
+      setLoading(true);
       const history = await readStorage("history");
 
-      const runSearch = (sub: string) =>
-        getSub(sub, sort)
-          .then((json) => {
-            setPosts(json);
-            // setPostChildren([...postChildren, ...json.data.children]);
-          })
-          .then(() => {
-            // if (posts?.data?.after) setAfter(posts.data.after);
-            setLoading(false);
-          })
-          .catch((error) => {
-            throw error;
-          });
+      const runSearch = (sub: string) => getSub(sub, sort).then((json) => setPosts(json));
 
       if (!history) {
         runSearch("pics");
@@ -101,6 +89,8 @@ const Feed: FC = () => {
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -112,26 +102,14 @@ const Feed: FC = () => {
   const getPanelValue = (searchText: string) => {
     const suggestions = list;
 
-    if (filter) {
-      return suggestions
-        .filter((item: { name: string; nsfw: boolean }) => {
-          if (item?.name?.toLowerCase().startsWith(searchText.toLowerCase()) && !item?.nsfw)
-            return item;
-          else return null;
-        })
-        .filter((item) => item !== null)
-        .map((item) => ({ label: item.name, value: item.name }))
-        .sort((a, b) => a.label.localeCompare(b.label));
-    } else {
-      return suggestions
-        .filter((item: { name: string }) => {
-          if (item?.name?.toLowerCase().startsWith(searchText.toLowerCase())) return item;
-          else return null;
-        })
-        .filter((item) => item !== null)
-        .map((item) => ({ label: item.name, value: item.name }))
-        .sort((a, b) => a.label.localeCompare(b.label));
-    }
+    return suggestions
+      .filter((item: { name: string; nsfw: boolean }) =>
+        filter
+          ? item?.name?.toLowerCase().startsWith(searchText.toLowerCase()) && !item?.nsfw
+          : item?.name?.toLowerCase().startsWith(searchText.toLowerCase())
+      )
+      .map((item) => ({ label: item.name, value: item.name }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   };
 
   const onSelect = (data: string) => {

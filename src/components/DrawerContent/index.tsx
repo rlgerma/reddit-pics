@@ -127,7 +127,6 @@ const DrawerContent = (props: RedditSinglePost): JSX.Element => {
                 }
               />
             </Col>
-
             {commentsLoaded ? (
               <Col span={24}>
                 <Collapse ghost={true}>
