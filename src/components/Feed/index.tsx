@@ -35,7 +35,7 @@ const Feed: FC = () => {
   // const [postChildren, setPostChildren] = useState<RedditPostsMap[]>([]);
   const [loading, setLoading] = useState(true);
   // const [after, setAfter] = useState<string | undefined>(undefined);
-  const [sort, setSort] = useState<'hot' | 'new' | 'top' | 'rising' | 'controversial'>('hot');
+  const [sort, setSort] = useState<'hot' | 'new' | 'top' | 'rising' | 'controversial'>();
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<boolean>(true);
   const [value, setValue] = useState<string>('pics');
@@ -181,10 +181,10 @@ const Feed: FC = () => {
           <Row align="middle" justify="center" style={{ padding: '0 1rem', marginBottom: '1rem' }}>
             <Col>
               <Radio.Group
-                defaultValue={sort}
+                defaultValue="hot"
                 buttonStyle="solid"
                 size={width >= 600 ? 'middle' : 'small'}
-                onChange={handleSortChange}
+                onChange={(event) => handleSortChange(event)}
               >
                 <Radio.Button value="hot">Hot</Radio.Button>
                 <Radio.Button value="new">New</Radio.Button>
