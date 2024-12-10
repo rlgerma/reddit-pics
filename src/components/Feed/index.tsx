@@ -1,9 +1,9 @@
-import { FC, Key, useEffect, useState } from "react";
+import { FC, Key, useEffect, useState } from 'react';
 
 // util function to get window width for drawer
-import { useWindowDimensions } from "../../utils/windowDimensions";
+import { useWindowDimensions } from '../../utils/windowDimensions';
 
-import DrawerContent from "../DrawerContent";
+import DrawerContent from '../DrawerContent';
 
 import {
   AutoComplete,
@@ -20,12 +20,12 @@ import {
   Spin,
   Switch,
   type AutoCompleteProps,
-} from "antd";
+} from 'antd';
 
-import list from "../../utils/convertedlist.json";
-import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from "../types";
-import { getSub } from "../../utils/getsub";
-import { readStorage } from "../../utils/read";
+import list from '../../utils/convertedlist.json';
+import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from '../types';
+import { getSub } from '../../utils/getsub';
+import { readStorage } from '../../utils/read';
 
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
@@ -35,11 +35,11 @@ const Feed: FC = () => {
   // const [postChildren, setPostChildren] = useState<RedditPostsMap[]>([]);
   const [loading, setLoading] = useState(true);
   // const [after, setAfter] = useState<string | undefined>(undefined);
-  const [sort, setSort] = useState<"hot" | "new" | "top" | "rising" | "controversial">("hot");
+  const [sort, setSort] = useState<'hot' | 'new' | 'top' | 'rising' | 'controversial'>();
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<boolean>(true);
-  const [value, setValue] = useState<string>("pics");
-  const [options, setOptions] = useState<AutoCompleteProps["options"]>([]);
+  const [value, setValue] = useState<string>('pics');
+  const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
   const [history, setHistory] = useState<string[]>([]);
   const { width } = useWindowDimensions();
 
@@ -48,19 +48,19 @@ const Feed: FC = () => {
       | React.MouseEvent<HTMLElement>
       | React.ChangeEvent<HTMLInputElement>
       | React.KeyboardEvent<HTMLInputElement>
-      | undefined = undefined,
+      | undefined,
     value: string
   ) {
     if (event) event.preventDefault();
     try {
-      if (value === "") return;
-      const history = await readStorage("history");
+      if (value === '') return;
+      const history = await readStorage('history');
       if (!history) {
-        localStorage.setItem("history", JSON.stringify([value]));
+        localStorage.setItem('history', JSON.stringify([value]));
         setHistory([value]);
       } else {
         const newHistory = [value, ...history];
-        localStorage.setItem("history", JSON.stringify(newHistory));
+        localStorage.setItem('history', JSON.stringify(newHistory));
         if (!history.includes(value)) {
           setHistory(newHistory);
         }
@@ -76,13 +76,13 @@ const Feed: FC = () => {
   async function handleSearch() {
     try {
       setLoading(true);
-      const history = await readStorage("history");
+      const history = await readStorage('history');
 
       const runSearch = (sub: string) => getSub(sub, sort).then((json) => setPosts(json));
 
       if (!history) {
-        runSearch("pics");
-        setValue("pics");
+        runSearch('pics');
+        setValue('pics');
       } else {
         runSearch(history[0]);
         setValue(history[0]);
@@ -122,26 +122,25 @@ const Feed: FC = () => {
   const onClose = () => setIsOpen(false);
 
   const handleSortChange = (event: RadioChangeEvent) => {
-    event.preventDefault();
     setSort(event.target.value);
-    if (value !== "") addHistory(undefined, value);
+    if (value !== '') addHistory(undefined, value);
   };
 
   const toggleFilter = () => {
     setOptions([]);
     setFilter(!filter);
-    localStorage.removeItem("history");
+    localStorage.removeItem('history');
     handleSearch();
     setHistory([]);
   };
 
   // Render Spinner while loading data
   return loading ? (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <Row style={{ margin: "15% auto" }}>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <Row style={{ margin: '15% auto' }}>
         <Col>
           <div>
-            <Spin size='large' />
+            <Spin size="large" />
           </div>
         </Col>
       </Row>
@@ -149,21 +148,19 @@ const Feed: FC = () => {
   ) : (
     <>
       <Drawer
-        title={postData?.title ?? "No Title"}
-        placement='right'
+        title={postData?.title ?? 'No Title'}
+        placement="right"
         onClose={onClose}
         open={isOpen}
         width={width > 600 ? 600 : 360}
-        headerStyle={{ textAlign: "center", padding: "2rem" }}
+        headerStyle={{ textAlign: 'center', padding: '2rem' }}
       >
         <DrawerContent {...postData} />
       </Drawer>
-      <Row align='middle' justify='end' gutter={[16, 16]}>
+      <Row align="middle" justify="end" gutter={[16, 16]}>
         <Col>
-          <Row align='middle'>
-            <Col
-              style={{ display: "inline-flex", alignItems: "center", marginLeft: "0 1rem 1rem" }}
-            >
+          <Row align="middle">
+            <Col style={{ display: 'inline-flex', alignItems: 'center', marginLeft: '0 1rem 1rem' }}>
               <AutoComplete
                 options={options}
                 style={{ width: 400 }}
@@ -172,7 +169,7 @@ const Feed: FC = () => {
                 defaultValue={value}
               >
                 <Input.Search
-                  addonBefore={"r/"}
+                  addonBefore={'r/'}
                   defaultValue={value}
                   onChange={(event) => setValue(event.target.value)}
                   onPressEnter={(event) => addHistory(event, value)}
@@ -181,40 +178,35 @@ const Feed: FC = () => {
               </AutoComplete>
             </Col>
           </Row>
-          <Row align='middle' justify='center' style={{ padding: "0 1rem", marginBottom: "1rem" }}>
+          <Row align="middle" justify="center" style={{ padding: '0 1rem', marginBottom: '1rem' }}>
             <Col>
               <Radio.Group
-                defaultValue={sort}
-                buttonStyle='solid'
-                size={width >= 600 ? "middle" : "small"}
-                onChange={handleSortChange}
+                defaultValue="hot"
+                buttonStyle="solid"
+                size={width >= 600 ? 'middle' : 'small'}
+                onChange={(event) => handleSortChange(event)}
               >
-                <Radio.Button value='hot'>Hot</Radio.Button>
-                <Radio.Button value='new'>New</Radio.Button>
-                <Radio.Button value='top'>Top</Radio.Button>
-                <Radio.Button value='rising'>Rising</Radio.Button>
-                <Radio.Button value='controversial'>Controversial</Radio.Button>
+                <Radio.Button value="hot">Hot</Radio.Button>
+                <Radio.Button value="new">New</Radio.Button>
+                <Radio.Button value="top">Top</Radio.Button>
+                <Radio.Button value="rising">Rising</Radio.Button>
+                <Radio.Button value="controversial">Controversial</Radio.Button>
               </Radio.Group>
             </Col>
-            <Col style={{ padding: "0 1rem", marginTop: width <= 600 ? "1rem" : "0" }}>
-              <Switch
-                checkedChildren='NSFW'
-                unCheckedChildren='SFW'
-                onChange={toggleFilter}
-                checked={!filter}
-              />
+            <Col style={{ padding: '0 1rem', marginTop: width <= 600 ? '1rem' : '0' }}>
+              <Switch checkedChildren="NSFW" unCheckedChildren="SFW" onChange={toggleFilter} checked={!filter} />
             </Col>
           </Row>
           <Row
-            align='middle'
-            justify={width >= 600 ? "end" : "center"}
-            style={{ padding: "0 1rem", marginBottom: "1rem", textAlign: "center" }}
+            align="middle"
+            justify={width >= 600 ? 'end' : 'center'}
+            style={{ padding: '0 1rem', marginBottom: '1rem', textAlign: 'center' }}
           >
             <Col>
               {history.map((sub: string) => (
                 <Button
-                  style={{ textDecoration: "underline" }}
-                  type='link'
+                  style={{ textDecoration: 'underline' }}
+                  type="link"
                   key={sub}
                   onClick={(event) => addHistory(event, sub)}
                 >
@@ -224,14 +216,9 @@ const Feed: FC = () => {
               {width <= 600 && <br />}
               {history.length >= 1 && (
                 <Button
-                  style={{ textDecoration: "underline" }}
-                  type='link'
-                  onClick={() => [
-                    localStorage.removeItem("history"),
-                    handleSearch(),
-                    setHistory([]),
-                    setOptions([]),
-                  ]}
+                  style={{ textDecoration: 'underline' }}
+                  type="link"
+                  onClick={() => [localStorage.removeItem('history'), handleSearch(), setHistory([]), setOptions([])]}
                 >
                   Clear All
                 </Button>
@@ -242,31 +229,26 @@ const Feed: FC = () => {
       </Row>
       <Row
         gutter={[16, 16]}
-        justify={posts?.data?.children ? "space-between" : "center"}
-        align={posts?.data?.children ? "stretch" : "middle"}
-        className='feed-row'
+        justify={posts?.data?.children ? 'space-between' : 'center'}
+        align={posts?.data?.children ? 'stretch' : 'middle'}
+        className="feed-row"
       >
         {posts?.data?.children ? (
           posts?.data?.children.map(
             (post: RedditPostsMap, index: Key | null | undefined) =>
-              post.data.url?.includes("https://i.") && (
+              post.data.url?.includes('https://i.') && (
                 <Col key={index} md={6} xs={20}>
                   <Card
                     hoverable
                     bordered={false}
                     cover={
-                      <Image
-                        alt={post.data.title}
-                        src={post.data.url}
-                        preview={false}
-                        className='search-card-image'
-                      />
+                      <Image alt={post.data.title} src={post.data.url} preview={false} className="search-card-image" />
                     }
                     onClick={() => {
                       setIsOpen(true);
                       setPostData(post.data);
                     }}
-                    className='search-card'
+                    className="search-card"
                   >
                     <Card.Meta title={post.data.title} description={post.data.author} />
                   </Card>
@@ -276,20 +258,20 @@ const Feed: FC = () => {
         ) : (
           <Col
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <Result
-              icon={<span style={{ fontSize: "48px" }}>(╯°□°）╯︵ ┻━┻</span>}
-              title='No Images Found!'
+              icon={<span style={{ fontSize: '48px' }}>(╯°□°）╯︵ ┻━┻</span>}
+              title="No Images Found!"
               extra={
                 <a
                   href={`https://www.reddit.com/r/${value}`}
-                  target='_blank'
-                  rel='noreferrer'
-                  style={{ color: "#FE4600", textDecoration: "underline" }}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: '#FE4600', textDecoration: 'underline' }}
                 >
                   Does the subbreddit exist?
                 </a>
