@@ -1,4 +1,4 @@
-import { FC, Key, useEffect, useState } from 'react';
+import { FC, Key, useCallback, useEffect, useState } from 'react';
 
 // util function to get window width for drawer
 import { useWindowDimensions } from '../../utils/windowDimensions';
@@ -13,6 +13,7 @@ import {
   Drawer,
   Image,
   Input,
+  Modal,
   Radio,
   RadioChangeEvent,
   Result,
@@ -41,6 +42,7 @@ const Feed: FC = () => {
   const [value, setValue] = useState<string>('pics');
   const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
   const [history, setHistory] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { width } = useWindowDimensions();
 
   async function addHistory(
@@ -73,13 +75,13 @@ const Feed: FC = () => {
   }
 
   // Loads data from reddit API in r/pics.
-  async function handleSearch() {
+  const handleSearch = useCallback(async () => {
     try {
       setLoading(true);
       const history = await readStorage('history');
 
       const runSearch = (sub: string) => getSub(sub, sort).then((json) => setPosts(json));
-
+      if (!sort) setSort('hot');
       if (!history) {
         runSearch('pics');
         setValue('pics');
@@ -92,12 +94,11 @@ const Feed: FC = () => {
     } finally {
       setLoading(false);
     }
-  }
+  }, [sort]);
 
   useEffect(() => {
     handleSearch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [handleSearch]);
 
   const getPanelValue = (searchText: string) => {
     const suggestions = list;
@@ -108,7 +109,7 @@ const Feed: FC = () => {
           ? item?.name?.toLowerCase().startsWith(searchText.toLowerCase()) && !item?.nsfw
           : item?.name?.toLowerCase().startsWith(searchText.toLowerCase())
       )
-      .map((item) => ({ label: item.name, value: item.name }))
+      .map((item) => ({ label: item.nsfw ? item.name + ' 🔞' : item.name, value: item.name }))
       .sort((a, b) => a.label.localeCompare(b.label));
   };
 
@@ -129,11 +130,20 @@ const Feed: FC = () => {
   const toggleFilter = () => {
     setOptions([]);
     setFilter(!filter);
+    if (filter) setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
     localStorage.removeItem('history');
     handleSearch();
     setHistory([]);
+    setIsModalOpen(false);
   };
 
+  const handleCancel = () => {
+    setFilter(!filter);
+    setIsModalOpen(false);
+  };
   // Render Spinner while loading data
   return loading ? (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -181,10 +191,10 @@ const Feed: FC = () => {
           <Row align="middle" justify="center" style={{ padding: '0 1rem', marginBottom: '1rem' }}>
             <Col>
               <Radio.Group
-                defaultValue="hot"
+                value={sort}
                 buttonStyle="solid"
                 size={width >= 600 ? 'middle' : 'small'}
-                onChange={(event) => handleSortChange(event)}
+                onChange={handleSortChange}
               >
                 <Radio.Button value="hot">Hot</Radio.Button>
                 <Radio.Button value="new">New</Radio.Button>
@@ -279,6 +289,34 @@ const Feed: FC = () => {
             />
           </Col>
         )}
+        <Modal
+          open={isModalOpen}
+          closable={false}
+          cancelButtonProps={{
+            style: {
+              display: 'none',
+            },
+          }}
+          okButtonProps={{
+            style: {
+              display: 'none',
+            },
+          }}
+          centered
+        >
+          <Result
+            title="Are you 18 or older?"
+            subTitle="Reddit may contain content only suitable for adults."
+            extra={[
+              <Button size="large" key="cancel" onClick={handleCancel}>
+                No
+              </Button>,
+              <Button size="large" type="primary" key="confirm" onClick={handleOk}>
+                Yes
+              </Button>,
+            ]}
+          />
+        </Modal>
       </Row>
     </>
   );
