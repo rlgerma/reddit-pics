@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
+    "@ant-design/icons": "^6.0.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "^14.6.1",
