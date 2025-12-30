@@ -45,7 +45,7 @@ const Feed: FC = () => {
   const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
   const [history, setHistory] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [favoriteUpdates, setFavoriteUpdates] = useState(0);
+  const [, setFavoriteUpdates] = useState(0);
   const { width } = useWindowDimensions();
   const observerTarget = useRef<HTMLDivElement>(null);
 
