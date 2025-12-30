@@ -73,7 +73,6 @@ const DrawerContent = (props: RedditSinglePost): JSX.Element => {
                 content={dayjs((props.created_utc ?? 0) * 1000 || new Date()).format('MMM D, YYYY')}
               />
             </Col>
-
             <Col span={12}>
               <DescriptionItem
                 title="Awards"
