@@ -324,12 +324,7 @@ const Feed: FC = () => {
                     hoverable
                     bordered={false}
                     cover={
-                      <Image
-                        alt={post.data.title}
-                        src={post.data.url}
-                        preview={false}
-                        className="search-card-image"
-                      />
+                      <Image alt={post.data.title} src={post.data.url} preview={false} className="search-card-image" />
                     }
                     onClick={() => {
                       setIsOpen(true);

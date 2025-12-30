@@ -79,9 +79,7 @@ const Favorites: FC = () => {
               <Card
                 hoverable
                 bordered={false}
-                cover={
-                  <Image alt={post.title} src={post.url} preview={false} className="search-card-image" />
-                }
+                cover={<Image alt={post.title} src={post.url} preview={false} className="search-card-image" />}
                 onClick={() => handleCardClick(post)}
                 className="search-card"
                 style={{ position: 'relative' }}
