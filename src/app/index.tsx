@@ -1,12 +1,19 @@
-import { FC } from "react";
+import { FC } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import LayoutWrap from "../components/Layout";
-import Feed from "../components/Feed";
+import LayoutWrap from '../components/Layout';
+import Feed from '../components/Feed';
+import Favorites from '../components/Favorites';
 
 const App: FC = () => (
-  <LayoutWrap>
-    <Feed />
-  </LayoutWrap>
+  <BrowserRouter>
+    <LayoutWrap>
+      <Routes>
+        <Route path="/" element={<Feed />} />
+        <Route path="/favorites" element={<Favorites />} />
+      </Routes>
+    </LayoutWrap>
+  </BrowserRouter>
 );
 
 export default App;

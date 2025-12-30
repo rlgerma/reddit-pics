@@ -1,4 +1,4 @@
-import { FC, Key, useCallback, useEffect, useState } from 'react';
+import { FC, Key, useCallback, useEffect, useRef, useState } from 'react';
 
 // util function to get window width for drawer
 import { useWindowDimensions } from '../../utils/windowDimensions';
@@ -22,20 +22,22 @@ import {
   Switch,
   type AutoCompleteProps,
 } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 
 import list from '../../utils/convertedlist.json';
 import { RedditAllPosts, RedditPostsMap, RedditSinglePost } from '../types';
 import { getSub } from '../../utils/getsub';
 import { readStorage } from '../../utils/read';
+import { addFavorite, removeFavorite, isFavorite } from '../../utils/favorites';
 
 // Component: Feed - Loads data from reddit API and displays thumbnails of posts from r/pics.
 // Selecting a thumbnail will open a drawer with the full image and details.
 const Feed: FC = () => {
   const [posts, setPosts] = useState<RedditAllPosts | undefined>(undefined);
   const [postData, setPostData] = useState<RedditSinglePost | undefined>(undefined);
-  // const [postChildren, setPostChildren] = useState<RedditPostsMap[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [after, setAfter] = useState<string | undefined>(undefined);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [after, setAfter] = useState<string | undefined>(undefined);
   const [sort, setSort] = useState<'hot' | 'new' | 'top' | 'rising' | 'controversial'>();
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState<boolean>(true);
@@ -43,7 +45,9 @@ const Feed: FC = () => {
   const [options, setOptions] = useState<AutoCompleteProps['options']>([]);
   const [history, setHistory] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [favoriteUpdates, setFavoriteUpdates] = useState(0);
   const { width } = useWindowDimensions();
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   async function addHistory(
     event:
@@ -67,38 +71,90 @@ const Feed: FC = () => {
           setHistory(newHistory);
         }
       }
+      handleSearch(value);
     } catch (error) {
       console.error(error);
-    } finally {
-      handleSearch();
     }
   }
 
   // Loads data from reddit API in r/pics.
-  const handleSearch = useCallback(async () => {
-    try {
-      setLoading(true);
-      const history = await readStorage('history');
+  const handleSearch = useCallback(
+    async (customSub?: string, customSort?: typeof sort) => {
+      try {
+        setLoading(true);
+        const history = await readStorage('history');
+        const sortToUse = customSort || sort || 'hot';
 
-      const runSearch = (sub: string) => getSub(sub, sort).then((json) => setPosts(json));
-      if (!sort) setSort('hot');
-      if (!history) {
-        runSearch('pics');
-        setValue('pics');
-      } else {
-        runSearch(history[0]);
-        setValue(history[0]);
+        const runSearch = async (sub: string) => {
+          const json = await getSub(sub, sortToUse);
+          setPosts(json);
+          setAfter(json?.data?.after);
+        };
+        if (!sort) setSort('hot');
+
+        const subToUse = customSub || (history ? history[0] : 'pics');
+        runSearch(subToUse);
+        setValue(subToUse);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }, [sort]);
+    },
+    [sort]
+  );
 
   useEffect(() => {
     handleSearch();
   }, [handleSearch]);
+
+  // Load more posts for infinite scroll
+  const loadMorePosts = useCallback(async () => {
+    if (!after || loadingMore || loading) return;
+
+    try {
+      setLoadingMore(true);
+      const sortToUse = sort || 'hot';
+      const json = await getSub(value, sortToUse, after);
+
+      if (json?.data?.children) {
+        setPosts((prevPosts) => ({
+          data: {
+            after: json.data.after,
+            children: [...(prevPosts?.data?.children || []), ...json.data.children],
+          },
+        }));
+        setAfter(json.data.after);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [after, loadingMore, loading, sort, value]);
+
+  // Set up intersection observer for infinite scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && after && !loadingMore) {
+          loadMorePosts();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [loadMorePosts, after, loadingMore]);
 
   const getPanelValue = (searchText: string) => {
     const suggestions = list;
@@ -123,8 +179,11 @@ const Feed: FC = () => {
   const onClose = () => setIsOpen(false);
 
   const handleSortChange = (event: RadioChangeEvent) => {
-    setSort(event.target.value);
-    if (value !== '') addHistory(undefined, value);
+    const newSort = event.target.value;
+    setSort(newSort);
+    if (value !== '') {
+      addHistory(undefined, value);
+    }
   };
 
   const toggleFilter = () => {
@@ -144,6 +203,19 @@ const Feed: FC = () => {
     setFilter(!filter);
     setIsModalOpen(false);
   };
+
+  const handleToggleFavorite = (post: RedditSinglePost, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const postId = post.url || `${post.author}-${post.created_utc}`;
+
+    if (isFavorite(postId)) {
+      removeFavorite(postId);
+    } else {
+      addFavorite(post);
+    }
+    setFavoriteUpdates((prev) => prev + 1);
+  };
+
   // Render Spinner while loading data
   return loading ? (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -259,8 +331,26 @@ const Feed: FC = () => {
                       setPostData(post.data);
                     }}
                     className="search-card"
+                    style={{ position: 'relative' }}
                   >
                     <Card.Meta title={post.data.title} description={post.data.author} />
+                    <Button
+                      type="text"
+                      shape="circle"
+                      icon={
+                        isFavorite(post.data.url || `${post.data.author}-${post.data.created_utc}`) ? (
+                          <HeartFilled style={{ fontSize: '20px', color: '#ff4d4f' }} />
+                        ) : (
+                          <HeartOutlined style={{ fontSize: '20px', color: '#ff4d4f' }} />
+                        )
+                      }
+                      onClick={(e) => handleToggleFavorite(post.data, e)}
+                      style={{
+                        position: 'absolute',
+                        bottom: '10px',
+                        right: '10px',
+                      }}
+                    />
                   </Card>
                 </Col>
               )
@@ -289,35 +379,40 @@ const Feed: FC = () => {
             />
           </Col>
         )}
-        <Modal
-          open={isModalOpen}
-          closable={false}
-          cancelButtonProps={{
-            style: {
-              display: 'none',
-            },
-          }}
-          okButtonProps={{
-            style: {
-              display: 'none',
-            },
-          }}
-          centered
-        >
-          <Result
-            title="Are you 18 or older?"
-            subTitle="Reddit may contain content only suitable for adults."
-            extra={[
-              <Button size="large" key="cancel" onClick={handleCancel}>
-                No
-              </Button>,
-              <Button size="large" type="primary" key="confirm" onClick={handleOk}>
-                Yes
-              </Button>,
-            ]}
-          />
-        </Modal>
       </Row>
+      {posts?.data?.children && after && (
+        <Row justify="center" style={{ padding: '2rem 0' }}>
+          <Col>{loadingMore ? <Spin size="large" /> : <div ref={observerTarget} style={{ height: '20px' }} />}</Col>
+        </Row>
+      )}
+      <Modal
+        open={isModalOpen}
+        closable={false}
+        cancelButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        okButtonProps={{
+          style: {
+            display: 'none',
+          },
+        }}
+        centered
+      >
+        <Result
+          title="Are you 18 or older?"
+          subTitle="Reddit may contain content only suitable for adults."
+          extra={[
+            <Button size="large" key="cancel" onClick={handleCancel}>
+              No
+            </Button>,
+            <Button size="large" type="primary" key="confirm" onClick={handleOk}>
+              Yes
+            </Button>,
+          ]}
+        />
+      </Modal>
     </>
   );
 };
